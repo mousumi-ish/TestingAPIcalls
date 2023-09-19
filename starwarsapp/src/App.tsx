@@ -1,12 +1,8 @@
-import { setDefaultResultOrder } from "dns";
+//import { setDefaultResultOrder } from "dns";
 import React, { useState, useEffect } from "react";
 import "./App.css";
 
 const App: React.FC = () => {
-  interface StarWarsCharacter {
-    name: string;
-  }
-
   const [character, setCharacter] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string | undefined>("");
 
