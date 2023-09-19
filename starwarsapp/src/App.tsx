@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { setDefaultResultOrder } from "dns";
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
-function App() {
+const App: React.FC = () => {
+  interface StarWarsCharacter {
+    name: string;
+  }
+
+  const [character, setCharacter] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string | undefined>("");
+
+  useEffect(() => {
+    getCharacter(1);
+  }, []);
+
+  const getCharacter = async (id: number) => {
+    const apiResponse = await fetch(`https://swapi.dev/api/people/${id}`);
+    try {
+      console.log("******=>***", apiResponse);
+      if (apiResponse.ok) {
+        const json = await apiResponse.json();
+        console.log("response =>", apiResponse.status);
+        console.log("jason =>", json);
+        setCharacter(json.name);
+      } else {
+        if (apiResponse.status === 500) {
+          setErrorMsg(`Oops... something went wrong, try again`);
+        } else if (apiResponse.status === 418) {
+          setErrorMsg(`418 I'm a teapot`);
+        }
+      }
+    } catch (error) {
+      console.log("error => ", error);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Starwars Character</h1>
+      <h2>Name : {character}</h2>
+      <h3>{errorMsg}</h3>
     </div>
   );
-}
+};
 
 export default App;
